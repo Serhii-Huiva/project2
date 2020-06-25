@@ -93,7 +93,7 @@
     </div> 
   </div>
   <script>
-    if (localStorage.getItem('username') != "null") {
+    if (localStorage.getItem('username') != "null" || "") {
       document.querySelector('#logIn').style.display = "none";
       document.querySelector('#userInfo').style.display = "block";
       document.querySelector('#userName').innerHTML = localStorage.getItem('username');
@@ -118,7 +118,7 @@
       document.querySelector('#newMessage').style.display = 'none';
     };
 
-    if (window.location.pathname != '/' && localStorage.getItem('username') != null) {
+    if (window.location.pathname != '/' && localStorage.getItem('username') != null || "") {
       const us = document.querySelectorAll('.userInMessage');
       for (let i = 0; i < us.length; i++) {
         if (us[i].innerHTML == localStorage.getItem('username')) {

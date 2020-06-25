@@ -1,12 +1,14 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-    window.addEventListener("unload", function() {
+window.addEventListener('unload', function(event) {
+    if (window.location.pathname != '/') {
         localStorage.setItem('windowClose', 'true');
-    });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
 
     if (window.location.pathname == '/') {
         if (localStorage.getItem('windowClose') == 'true') {
-            if (localStorage.getItem('username') != 'null') {
+            if (localStorage.getItem('username') != 'null' || "") {
                 localStorage.setItem('windowClose', 'false');
                 const request = new XMLHttpRequest();
                 const name = localStorage.getItem('username');
@@ -20,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location = href;
                     }
                     else {
-                        
+                        let href = location.protocol + '//' + document.domain + ':' + location.port + '/' + localStorage.getItem('activeTopic');
+                        window.location = href;
                     }
                 }
                 const data = new FormData();
