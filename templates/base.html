@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href=" ../static/styles.css ">
+  <link rel="shortcut icon" href="../static/img/icon.png" type="image/x-icon">
+  <title> {% block title %} {% endblock %} </title>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+</head>
+<body>
+  <header>
+    <div class="logo_item">
+        <img src=" ../static/img/logo.png " alt="Logo">
+    </div>
+    <div class="header_zero">
+      <div id="userInfo">
+        <h4 id="userName">  </h4>
+        <input type="button" value="Exit" id="exitButton">
+      </div>
+    </div>
+    <div class="user_item">
+      <div id="logIn">
+        <form id="loginForm">
+          <input type="text" name="name" id="username" placeholder="Enter Your Name">
+          <input type="submit" id="enterName" value="Enter Name">
+        </form>
+      </div>
+    </div>
+  </header>
+  <div class="content">
+    <nav>
+      <div class="zero_item">
+        <div id="newTopic_item">
+          <form id="formNewTopic">
+            <input type="text" id="inputNewTopic" placeholder="Enter new topic name" name="newTopic">
+            <input type="submit" value="Add topic" id="newTopicButton">
+          </form>
+        </div>
+      </div>
+      <div class="nav_topic_item">
+        <ul id="topics">
+          {% for topic in topics %}
+            <li id="topc">
+              <a href="{{ topic }}" id="topic">{{ topic }}</a>
+              <button id="topicClose" name="{{ topic }}"> x </button>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="themesSelect">
+        <h5 class="themes">Themes:</h5>
+        <select name="themes" id="select">
+          <option value="Light">Light</option>
+          <option value="Dark">Dark</option>
+          <option value="Ukraine">Ukraine</option>
+          <option value="American">American</option>
+        </select>
+      </div>
+    </nav>
+    <div class="messanger_item">
+      {% if topicNone %}
+        <div class="messangerZero">
+
+        </div>
+      {% else %}
+        <div class="userTopicItem">
+
+        </div>
+        <div class="messanger">
+          <div class="messanger_window">
+            {% for message in messages %}
+              <div class="message">
+                <h5 class="userInMessage">{{ message[0] }}</h5>
+                <p class="userMessage">{{ message[1] }}</p>
+                <p class="timeMessage">
+                    {{message[2][0]}}.{{message[2][1]}}.{{message[2][2]}}
+                    {{message[3][0]}}:{{message[3][1]}}:{{message[3][2]}}
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+          <div id="newMessage">
+            <form id="messageForm" method="POST">
+              <input type="text" name="message" id="inputMessage">
+              <input type="submit" value="Send" id="sendMessage">
+            </form>
+          </div>
+        </div>
+      {% endif %}
+    </div> 
+  </div>
+  <script>
+    if (localStorage.getItem('username') != "null") {
+      document.querySelector('#logIn').style.display = "none";
+      document.querySelector('#userInfo').style.display = "block";
+      document.querySelector('#userName').innerHTML = localStorage.getItem('username');
+      
+      document.getElementById('newTopic_item').style.display = 'block';
+      document.querySelector('#newMessage').style.display = 'block';
+
+      document.querySelector('#sendMessage').disabled = true;
+
+      document.querySelector('#messageForm').onkeyup = () => {
+          if (document.querySelector('#inputMessage').value.length > 2)
+              document.querySelector('#sendMessage').disabled = false;
+          else
+              document.querySelector('#sendMessage').disabled = true;
+      };
+    }
+    else {
+      document.querySelector('#logIn').style.display = "block";
+      document.querySelector('#userInfo').style.display = "none";
+
+      document.getElementById('newTopic_item').style.display = "none";
+      document.querySelector('#newMessage').style.display = 'none';
+    };
+
+    if (window.location.pathname != '/' && localStorage.getItem('username') != null) {
+      const us = document.querySelectorAll('.userInMessage');
+      for (let i = 0; i < us.length; i++) {
+        if (us[i].innerHTML == localStorage.getItem('username')) {
+          us[i].parentElement.classList.add('myMessage');
+        }
+        else {
+          us[i].parentElement.classList.add('alienMessage');
+        }
+      }
+
+      document.querySelector('.messanger_window').scrollTop = document.querySelector('.messanger_window').scrollHeight;
+
+    // topics
+      let activeTopic = localStorage.getItem('activeTopic');
+      var userTopics = JSON.parse(localStorage.getItem('topics'));
+      let topic = window.location.pathname.slice(1);
+
+      if (topic != activeTopic) { 
+        if (localStorage.getItem('username') == "null") {
+          userTopics[0] = activeTopic = topic;
+          localStorage.setItem('topics', JSON.stringify(userTopics));
+          localStorage.setItem('activeTopic', topic);
+        }
+        else {
+          let count = userTopics.length;
+          if (count > 0) {
+            for (let t=0; t<count; t++) {
+              if (userTopics[t] != topic) {
+                if (t == count-1) {
+                  userTopics[count] = topic;
+                  localStorage.setItem('topics', JSON.stringify(userTopics));
+                }
+                else {
+                  continue;
+                }
+              }
+              else {
+                break;
+              }
+            }
+            activeTopic = topic;
+            localStorage.setItem('activeTopic', topic);
+          }
+          else {
+            if (activeTopic == '') {
+              userTopics[0] = activeTopic = topic; 
+            }
+            else {
+              userTopics[0] = activeTopic;
+              activeTopic = topic;
+            }
+            
+            localStorage.setItem('topics', JSON.stringify(userTopics));
+            localStorage.setItem('activeTopic', topic);
+          }
+        }
+      }
+
+      // display user topic
+      for (let i=0; i<userTopics.length; i++) {
+        let nameTopic = userTopics[i];
+        let activeTpc;
+
+        if (nameTopic == activeTopic) {
+          activeTpc = '1';        
+        }
+        else {
+          activeTpc = '0';
+        }
+
+        createTopic (nameTopic, activeTpc);
+      }
+    }
+
+    // delete user topic
+    document.querySelectorAll('.closeTopic').forEach( button => {
+      button.onclick = () => {
+        let idname = button.id;
+        let activeTopic = localStorage.getItem('activeTopic');
+        console.log(activeTopic);
+        for (let i=0; i<userTopics.length; i++) {
+          if (userTopics[i] == idname) {
+            if (userTopics[i] == activeTopic) {
+              if (i != 0) {
+                activeTopic = userTopics[i-1];
+                localStorage.setItem('activeTopic', userTopics[i-1]);
+              }
+              else {
+                activeTopic = userTopics[i+1];
+                localStorage.setItem('activeTopic', userTopics[i+1]);
+              }
+                let href = location.protocol + '//' + document.domain + ':' + location.port + '/' + activeTopic;
+                window.location = href;
+            }
+            userTopics.splice(i, 1);
+            localStorage.setItem('topics', JSON.stringify(userTopics));
+            const divTopic = button.parentElement;
+            divTopic.style.animationPlayState = 'running';
+            divTopic.addEventListener('animationend', () => {
+              divTopic.remove();
+            });
+          }
+        }
+      }
+    })
+
+    //funtcion create new usertopic
+    function createTopic (name, active) {
+      const div = document.createElement('div');
+      const link = document.createElement('a');
+      const btn = document.createElement('button');
+
+      btn.innerHTML = 'x';
+      btn.className = 'closeTopic';
+      btn.id = name;
+      link.innerHTML = name;
+      link.classList.add('tpc');
+      link.style.textDecoration = 'none';
+      link.href = name;
+      div.appendChild(link);
+      div.appendChild(btn);
+      div.className = 'topic_title';
+
+      if (active == '1') {
+        div.classList.remove('topic_title');
+        div.classList.add('activeTopic');
+      }
+
+      document.querySelector('.userTopicItem').appendChild(div);
+    }  
+
+    //create button 'delete message'
+    document.querySelectorAll('.myMessage').forEach( message => {
+      let button = document.createElement('button');
+
+      button.className = 'deleteMessage';
+      button.innerHTML = 'Delete message';
+
+      message.prepend(button);
+    });
+  </script>
+  <script src="{{ url_for('static', filename='themes.js') }}"></script>
+</body>
+</html>

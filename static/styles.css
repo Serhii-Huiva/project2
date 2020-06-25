@@ -1,0 +1,268 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    text-align: center;
+    font-size: 24px;
+}
+
+header {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+}
+
+.logo_item img {
+    margin: 10px 0px 10px 50px;
+}
+
+#userName {
+    font-size: 30px;
+    display: inline-block;
+    margin: 25px 10px;
+}
+
+#username {
+    width: 90%;
+    margin: 10px 10px 5px 0px;
+}
+
+#enterName, #exitButton {
+    margin-bottom: 10px;
+    font-size: 18px;
+    display: inline-block;
+}
+
+.content {
+    max-width: 1250px;
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 3fr;
+    margin: 10px 50px;
+}
+
+.nav_topic_item {
+    margin: 0px auto;
+    width: 95%;
+    height: 395px;
+    overflow: auto;
+}
+
+.zero_item {
+    width: 99%;
+    height: 90px;
+}
+
+#inputNewTopic {
+    width: 85%;;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+#newTopicButton {
+    margin-bottom: 10px;
+    font-size: 18px;
+    width: 50%;
+}
+
+#topics {
+    margin: 0px;
+    padding: 0px;
+}
+
+@keyframes closeTopic {
+    0%{
+        opacity: 1;
+        height: 100%;
+        width: 95%;
+        line-height: 100%;
+        padding: 5px;
+        margin: 7px auto;
+        font-size: 18px;
+    }
+    70% {
+        opacity: 0;
+        height: 100%;
+        width: 0px;
+        line-height: 100%;
+        padding: 5px;
+        margin: 7px auto;
+        font-size: 0px;
+    }
+    100% {
+        opacity: 0;
+        height: 0%;
+        width: 0px;
+        line-height: 0%;
+        padding: 0px;
+        margin: 0px;
+        font-size: 0px;
+    }
+}
+
+#topics li {
+    list-style-type: none;
+    font-size: 18px;
+    width: 95%;
+    margin: 7px auto;
+    animation-name: closeTopic;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+
+#topic {
+    display: inline;
+    text-decoration: none;
+}
+
+#topicClose, .closeTopic {
+    display: inline-block;
+    border: medium none;
+    background-image: none; 
+    background: transparent;
+    background-color: transparent;
+    font-size: 20px;
+    float: right;
+}
+
+.closeTopic {
+    margin: 0px 2px;
+    visibility: inherit;
+}
+
+.userTopicItem {
+    text-align: left;
+    height: 35px;
+}
+
+@keyframes userTopicClose {
+    0% {
+        opacity: 1;
+        width: max-content;
+    }
+    1% {
+        opacity: 1;
+        width: 100px;
+        visibility: collapse;
+    }
+    100% {
+        opacity: 0;
+        width: 0px;
+    }
+}
+
+.topic_title {
+    display: inline-block;
+    width: max-content;
+    height: 30px;
+    font-size: 16px;
+    animation-name: userTopicClose;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+
+.tpc {
+    display: inline;
+    font-size: 20px;
+    padding: 0px 10px 5px 10px;
+    visibility: inherit;
+}
+
+.activeTopic {
+    border-bottom: none;
+    display: inline-block;
+    width: max-content;
+    height: 30px;
+    font-size: 16px;
+    animation-name: userTopicClose;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+
+.themesSelect {
+    width: 95%;
+}
+
+.themes {
+    font-size: 20px;
+    width: 30%;
+    display: inline-block;
+}
+
+#select {
+    width: 65%;
+    height: 30px;
+    font-size: 20px;
+    display: inline-block;
+}
+
+.messanger_window {
+    width: 99%;
+    height: 450px;
+    background-color: #fff;
+    overflow: auto;
+}
+
+#messageForm {
+    margin-top: 5px;
+}
+
+#inputMessage {
+    width: 75%;
+}
+
+.message {
+    border: black solid 1px;
+    border-radius: 10px;
+    width: 75%;
+    margin: 5px 20px;
+}
+
+.deleteMessage {
+    display: inline-block;
+    margin: 3px 10px 0px 5px;
+    text-decoration: none;
+    height: 25px;
+    font-size: 14px;
+}
+
+.userInMessage {
+    font-size: 20px;
+    margin-bottom: 3px;
+    display: inline-block;
+}
+
+.userMessage {
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.timeMessage {
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.myMessage {
+    float: right;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.alienMessage {
+    float: left;
+    text-align: left;
+    padding-left: 20px;
+}
+
+#inputMessage {
+    font-size: 24px;
+    height: 30px;
+}
+
+#sendMessage {
+    height: 30px;
+    font-size: 18px;
+    text-decoration: none;
+}
